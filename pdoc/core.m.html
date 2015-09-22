@@ -1097,7 +1097,7 @@ table {
     <span class="n">NOISE</span> <span class="o">=</span> <span class="mi">3</span>
     
     <span class="n">STRICT_MIN_LENGTH</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">DROP_TRAILING_SILENCE</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">DROP_TAILING_SILENCE</span> <span class="o">=</span> <span class="mi">4</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> 
                  <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="p">,</span>
@@ -1106,10 +1106,8 @@ table {
         
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        -----------</span>
+<span class="sd">        **Parameters:**</span>
 <span class="sd">        </span>
-
 <span class="sd">        `validator` :</span>
 <span class="sd">            instance of `DataValidator` that implements `is_valid` method.</span>
 <span class="sd">        </span>
@@ -1140,12 +1138,6 @@ table {
 <span class="sd">            This arguement is normally used if `init_min` is used. **Default = 0**,</span>
 <span class="sd">            by default this argument is not taken into consideration.</span>
 <span class="sd">            </span>
-<span class="sd">        </span>
-<span class="sd">        keep_trailing_silence : boolean, default=False</span>
-<span class="sd">            Whether to keep the trailing non valid frames of a valid token</span>
-<span class="sd">            This seems to be particularly useful to avoid an abrupt cut-off</span>
-<span class="sd">            when tokenizing some kinds of signals (e.g. audio signal)</span>
-<span class="sd">        </span>
 <span class="sd">        `mode` : *(int, default=0)*</span>
 <span class="sd">            `mode` can be:</span>
 <span class="sd">            </span>
@@ -1197,7 +1189,7 @@ table {
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6)]</span>
 <span class="sd">                </span>
 <span class="sd">               </span>
-<span class="sd">           2. `StreamTokenizer.DROP_TRAILING_SILENCE`: drop all trailing non-valid frames</span>
+<span class="sd">           2. `StreamTokenizer.DROP_TAILING_SILENCE`: drop all tailing non-valid frames</span>
 <span class="sd">               from a token to be delivered if and only if it is not **truncated**.</span>
 <span class="sd">               This can be a bit tricky. A token is actually delivered if:</span>
 <span class="sd">               </span>
@@ -1209,19 +1201,19 @@ table {
 <span class="sd">               </span>
 <span class="sd">            In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
 <span class="sd">            data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
-<span class="sd">            frame (`max_length` is reached but `max_continuous_silence` not yet) any trailing</span>
+<span class="sd">            frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
 <span class="sd">            silence will be kept because it can potentilly be part of valid token (if `max_length`</span>
 <span class="sd">            was bigger). But if `max_continuous_silence` is reched before `max_length`, the delivered</span>
 <span class="sd">            token will not be considered as truncted but a result of *normal* end of detection</span>
-<span class="sd">            (i.e. no more valid data). In that case the trailing silence can be removed if you use</span>
-<span class="sd">            the `StreamTokenizer.DROP_TRAILING_SILENCE` mode.</span>
+<span class="sd">            (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
+<span class="sd">            the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
 <span class="sd">               </span>
 <span class="sd">            Take the following example:</span>
 <span class="sd">                </span>
 <span class="sd">                #!python</span>
 <span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), min_length=3,</span>
 <span class="sd">                max_length=6, max_continuous_silence=3,</span>
-<span class="sd">                mode=StreamTokenizer.DROP_TRAILING_SILENCE)</span>
+<span class="sd">                mode=StreamTokenizer.DROP_TAILING_SILENCE)</span>
 <span class="sd">                </span>
 <span class="sd">                dsource = StringDataSource(&quot;aaaAAAaaaBBbbbb&quot;)</span>
 <span class="sd">                tokenizer.tokenize(dsource)</span>
@@ -1231,18 +1223,18 @@ table {
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;], 9, 10)]</span>
 <span class="sd">                </span>
-<span class="sd">            The first troken is delivered with its trailing silence because it is truncated</span>
-<span class="sd">            while the second one has its trailing frames removed.</span>
+<span class="sd">            The first troken is delivered with its tailing silence because it is truncated</span>
+<span class="sd">            while the second one has its tailing frames removed.</span>
 <span class="sd">            </span>
-<span class="sd">            Without `StreamTokenizer.DROP_TRAILING_SILENCE` the output whould be:</span>
+<span class="sd">            Without `StreamTokenizer.DROP_TAILING_SILENCE` the output whould be:</span>
 <span class="sd">                </span>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;], 9, 13)]</span>
 
 <span class="sd">            </span>
 <span class="sd">            </span>
-<span class="sd">           3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE`:</span>
-<span class="sd">               use both options. That means: first remove trailing silence, then ckeck if the</span>
+<span class="sd">           3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`:</span>
+<span class="sd">               use both options. That means: first remove tailing silence, then ckeck if the</span>
 <span class="sd">               token still has at least a length of `min_length`.</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1273,7 +1265,7 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_strict_min_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_deliver</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1288,34 +1280,27 @@ table {
     
     <span class="k">def</span> <span class="nf">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set this tokenizer&#39;s mode.</span>
-<span class="sd">        </span>
-<span class="sd">        Paramerters</span>
-<span class="sd">        ------------</span>
+<span class="sd">        **Parameters:**</span>
 <span class="sd">        </span>
 <span class="sd">        `mode` : *(int)*</span>
-<span class="sd">           New mode, must be one of:</span>
-<span class="sd">           </span>
-<span class="sd">           a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
-<span class="sd">           </span>
-<span class="sd">           b. `StreamTokenizer.DROP_TRAILING_SILENCE`</span>
-<span class="sd">           </span>
-<span class="sd">           c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE`</span>
-<span class="sd">           </span>
-<span class="sd">           d. 0</span>
-<span class="sd">           </span>
-<span class="sd">           </span>
-<span class="sd">           See `StreamTokenizer.__init__` for more information about the mode.</span>
+<span class="sd">            New mode, must be one of:</span>
+<span class="sd">            </span>
+<span class="sd">                a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
+<span class="sd">                b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">                c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       </span>
+<span class="sd">                d. 0</span>
+<span class="sd">                   </span>
+<span class="sd">        See `StreamTokenizer.__init__` for more information about the mode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">,</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">,</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
             
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong value for mode&quot;</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_strict_min_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
         
     
     <span class="k">def</span> <span class="nf">get_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1323,10 +1308,10 @@ table {
 <span class="sd">        Return the current mode. To check whether a specific mode is activated use</span>
 <span class="sd">        the bitwise &#39;and&#39; operator `&amp;`. Example:</span>
 <span class="sd">           </span>
-<span class="sd">            #!python</span>
+<span class="sd">        .. code:: python</span>
+<span class="sd">        </span>
 <span class="sd">            if mode &amp; self.STRICT_MIN_LENGTH != 0:</span>
 <span class="sd">                ...</span>
-<span class="sd">                </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
         
@@ -1344,8 +1329,8 @@ table {
 <span class="sd">        Read data from `data_source`, one frame a time, and process the read frames in</span>
 <span class="sd">        order to detect sequences of frames that make up valid tokens.</span>
 <span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
+<span class="sd">        **Parameters:**</span>
+<span class="sd">        </span>
 <span class="sd">        </span>
 <span class="sd">        `data_source` : instance of the `DataSource` class that implements a &#39;read&#39; method.</span>
 <span class="sd">        &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
@@ -1357,8 +1342,7 @@ table {
 <span class="sd">           is found.</span>
 <span class="sd">           </span>
 <span class="sd">           </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        **Returns:**</span>
 <span class="sd">        </span>
 <span class="sd">        A list of tokens if `callback` is None. Each token is tuple with the following elemnts:</span>
 <span class="sd">        </span>
@@ -1495,7 +1479,7 @@ table {
     
     <span class="k">def</span> <span class="nf">_process_end_of_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truncated</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">truncated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_silence_length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">truncated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_silence_length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c"># happens if max_continuous_silence is reached</span>
             <span class="c"># or max_length is reached at a silent frame</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_silence_length</span><span class="p">]</span>
@@ -1558,7 +1542,7 @@ for interesting sub-sequences extraction.</p></div>
     <span class="n">NOISE</span> <span class="o">=</span> <span class="mi">3</span>
     
     <span class="n">STRICT_MIN_LENGTH</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">DROP_TRAILING_SILENCE</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">DROP_TAILING_SILENCE</span> <span class="o">=</span> <span class="mi">4</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> 
                  <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="p">,</span>
@@ -1567,10 +1551,8 @@ for interesting sub-sequences extraction.</p></div>
         
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        -----------</span>
+<span class="sd">        **Parameters:**</span>
 <span class="sd">        </span>
-
 <span class="sd">        `validator` :</span>
 <span class="sd">            instance of `DataValidator` that implements `is_valid` method.</span>
 <span class="sd">        </span>
@@ -1601,12 +1583,6 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">            This arguement is normally used if `init_min` is used. **Default = 0**,</span>
 <span class="sd">            by default this argument is not taken into consideration.</span>
 <span class="sd">            </span>
-<span class="sd">        </span>
-<span class="sd">        keep_trailing_silence : boolean, default=False</span>
-<span class="sd">            Whether to keep the trailing non valid frames of a valid token</span>
-<span class="sd">            This seems to be particularly useful to avoid an abrupt cut-off</span>
-<span class="sd">            when tokenizing some kinds of signals (e.g. audio signal)</span>
-<span class="sd">        </span>
 <span class="sd">        `mode` : *(int, default=0)*</span>
 <span class="sd">            `mode` can be:</span>
 <span class="sd">            </span>
@@ -1658,7 +1634,7 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6)]</span>
 <span class="sd">                </span>
 <span class="sd">               </span>
-<span class="sd">           2. `StreamTokenizer.DROP_TRAILING_SILENCE`: drop all trailing non-valid frames</span>
+<span class="sd">           2. `StreamTokenizer.DROP_TAILING_SILENCE`: drop all tailing non-valid frames</span>
 <span class="sd">               from a token to be delivered if and only if it is not **truncated**.</span>
 <span class="sd">               This can be a bit tricky. A token is actually delivered if:</span>
 <span class="sd">               </span>
@@ -1670,19 +1646,19 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">               </span>
 <span class="sd">            In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
 <span class="sd">            data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
-<span class="sd">            frame (`max_length` is reached but `max_continuous_silence` not yet) any trailing</span>
+<span class="sd">            frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
 <span class="sd">            silence will be kept because it can potentilly be part of valid token (if `max_length`</span>
 <span class="sd">            was bigger). But if `max_continuous_silence` is reched before `max_length`, the delivered</span>
 <span class="sd">            token will not be considered as truncted but a result of *normal* end of detection</span>
-<span class="sd">            (i.e. no more valid data). In that case the trailing silence can be removed if you use</span>
-<span class="sd">            the `StreamTokenizer.DROP_TRAILING_SILENCE` mode.</span>
+<span class="sd">            (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
+<span class="sd">            the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
 <span class="sd">               </span>
 <span class="sd">            Take the following example:</span>
 <span class="sd">                </span>
 <span class="sd">                #!python</span>
 <span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), min_length=3,</span>
 <span class="sd">                max_length=6, max_continuous_silence=3,</span>
-<span class="sd">                mode=StreamTokenizer.DROP_TRAILING_SILENCE)</span>
+<span class="sd">                mode=StreamTokenizer.DROP_TAILING_SILENCE)</span>
 <span class="sd">                </span>
 <span class="sd">                dsource = StringDataSource(&quot;aaaAAAaaaBBbbbb&quot;)</span>
 <span class="sd">                tokenizer.tokenize(dsource)</span>
@@ -1692,18 +1668,18 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;], 9, 10)]</span>
 <span class="sd">                </span>
-<span class="sd">            The first troken is delivered with its trailing silence because it is truncated</span>
-<span class="sd">            while the second one has its trailing frames removed.</span>
+<span class="sd">            The first troken is delivered with its tailing silence because it is truncated</span>
+<span class="sd">            while the second one has its tailing frames removed.</span>
 <span class="sd">            </span>
-<span class="sd">            Without `StreamTokenizer.DROP_TRAILING_SILENCE` the output whould be:</span>
+<span class="sd">            Without `StreamTokenizer.DROP_TAILING_SILENCE` the output whould be:</span>
 <span class="sd">                </span>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;], 9, 13)]</span>
 
 <span class="sd">            </span>
 <span class="sd">            </span>
-<span class="sd">           3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE`:</span>
-<span class="sd">               use both options. That means: first remove trailing silence, then ckeck if the</span>
+<span class="sd">           3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`:</span>
+<span class="sd">               use both options. That means: first remove tailing silence, then ckeck if the</span>
 <span class="sd">               token still has at least a length of `min_length`.</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1734,7 +1710,7 @@ for interesting sub-sequences extraction.</p></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_strict_min_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_deliver</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1749,34 +1725,27 @@ for interesting sub-sequences extraction.</p></div>
     
     <span class="k">def</span> <span class="nf">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set this tokenizer&#39;s mode.</span>
-<span class="sd">        </span>
-<span class="sd">        Paramerters</span>
-<span class="sd">        ------------</span>
+<span class="sd">        **Parameters:**</span>
 <span class="sd">        </span>
 <span class="sd">        `mode` : *(int)*</span>
-<span class="sd">           New mode, must be one of:</span>
-<span class="sd">           </span>
-<span class="sd">           a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
-<span class="sd">           </span>
-<span class="sd">           b. `StreamTokenizer.DROP_TRAILING_SILENCE`</span>
-<span class="sd">           </span>
-<span class="sd">           c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE`</span>
-<span class="sd">           </span>
-<span class="sd">           d. 0</span>
-<span class="sd">           </span>
-<span class="sd">           </span>
-<span class="sd">           See `StreamTokenizer.__init__` for more information about the mode.</span>
+<span class="sd">            New mode, must be one of:</span>
+<span class="sd">            </span>
+<span class="sd">                a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
+<span class="sd">                b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">                c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       </span>
+<span class="sd">                d. 0</span>
+<span class="sd">                   </span>
+<span class="sd">        See `StreamTokenizer.__init__` for more information about the mode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">,</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">,</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
             
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong value for mode&quot;</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_strict_min_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
         
     
     <span class="k">def</span> <span class="nf">get_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1784,10 +1753,10 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        Return the current mode. To check whether a specific mode is activated use</span>
 <span class="sd">        the bitwise &#39;and&#39; operator `&amp;`. Example:</span>
 <span class="sd">           </span>
-<span class="sd">            #!python</span>
+<span class="sd">        .. code:: python</span>
+<span class="sd">        </span>
 <span class="sd">            if mode &amp; self.STRICT_MIN_LENGTH != 0:</span>
 <span class="sd">                ...</span>
-<span class="sd">                </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
         
@@ -1805,8 +1774,8 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        Read data from `data_source`, one frame a time, and process the read frames in</span>
 <span class="sd">        order to detect sequences of frames that make up valid tokens.</span>
 <span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
+<span class="sd">        **Parameters:**</span>
+<span class="sd">        </span>
 <span class="sd">        </span>
 <span class="sd">        `data_source` : instance of the `DataSource` class that implements a &#39;read&#39; method.</span>
 <span class="sd">        &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
@@ -1818,8 +1787,7 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">           is found.</span>
 <span class="sd">           </span>
 <span class="sd">           </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        **Returns:**</span>
 <span class="sd">        </span>
 <span class="sd">        A list of tokens if `callback` is None. Each token is tuple with the following elemnts:</span>
 <span class="sd">        </span>
@@ -1956,7 +1924,7 @@ for interesting sub-sequences extraction.</p></div>
     
     <span class="k">def</span> <span class="nf">_process_end_of_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truncated</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">truncated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_silence_length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">truncated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_silence_length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c"># happens if max_continuous_silence is reached</span>
             <span class="c"># or max_length is reached at a silent frame</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_silence_length</span><span class="p">]</span>
@@ -1999,7 +1967,7 @@ for interesting sub-sequences extraction.</p></div>
           </ul>
           <h3>Class variables</h3>
             <div class="item">
-            <p id="auditok.core.StreamTokenizer.DROP_TRAILING_SILENCE" class="name">var <span class="ident">DROP_TRAILING_SILENCE</span></p>
+            <p id="auditok.core.StreamTokenizer.DROP_TAILING_SILENCE" class="name">var <span class="ident">DROP_TAILING_SILENCE</span></p>
             
 
             
@@ -2129,7 +2097,7 @@ for interesting sub-sequences extraction.</p></div>
 
     
   
-    <div class="desc"><h2>Parameters</h2>
+    <div class="desc"><p><strong>Parameters:</strong></p>
 <p><code>validator</code> :
     instance of <code>DataValidator</code> that implements <code>is_valid</code> method.</p>
 <p><code>min_length</code> : <em>(int)</em>
@@ -2148,10 +2116,6 @@ for interesting sub-sequences extraction.</p></div>
     Maximum number of tolerated consecutive non-valid frames if the             number already gathered valid frames has not yet reached 'init_min'.
     This arguement is normally used if <code>init_min</code> is used. <strong>Default = 0</strong>,
     by default this argument is not taken into consideration.</p>
-<p>keep_trailing_silence : boolean, default=False
-    Whether to keep the trailing non valid frames of a valid token
-    This seems to be particularly useful to avoid an abrupt cut-off
-    when tokenizing some kinds of signals (e.g. audio signal)</p>
 <p><code>mode</code> : <em>(int, default=0)</em>
     <code>mode</code> can be:</p>
 <ol>
@@ -2203,7 +2167,7 @@ tokenizer.tokenize(dsource)
 
 </li>
 <li>
-<p><code>StreamTokenizer.DROP_TRAILING_SILENCE</code>: drop all trailing non-valid frames
+<p><code>StreamTokenizer.DROP_TAILING_SILENCE</code>: drop all tailing non-valid frames
        from a token to be delivered if and only if it is not <strong>truncated</strong>.
        This can be a bit tricky. A token is actually delivered if:</p>
 <p>a. <code>max_continuous_silence</code> is reached</p>
@@ -2211,16 +2175,16 @@ tokenizer.tokenize(dsource)
 <p>b. Its length reaches <code>max_length</code>. This is called a <strong>truncated</strong> token</p>
 <p>In the current implementation, a <code>StreamTokenizer</code>'s decision is only based on seen
 data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated
-frame (<code>max_length</code> is reached but <code>max_continuous_silence</code> not yet) any trailing
+frame (<code>max_length</code> is reached but <code>max_continuous_silence</code> not yet) any tailing
 silence will be kept because it can potentilly be part of valid token (if <code>max_length</code>
 was bigger). But if <code>max_continuous_silence</code> is reched before <code>max_length</code>, the delivered
 token will not be considered as truncted but a result of <em>normal</em> end of detection
-(i.e. no more valid data). In that case the trailing silence can be removed if you use
-the <code>StreamTokenizer.DROP_TRAILING_SILENCE</code> mode.</p>
+(i.e. no more valid data). In that case the tailing silence can be removed if you use
+the <code>StreamTokenizer.DROP_TAILING_SILENCE</code> mode.</p>
 <p>Take the following example:</p>
 <div class="codehilite"><pre><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">StreamTokenizer</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="n">UpperCaseChecker</span><span class="p">(),</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-<span class="n">mode</span><span class="o">=</span><span class="n">StreamTokenizer</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span>
+<span class="n">mode</span><span class="o">=</span><span class="n">StreamTokenizer</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span>
 
 <span class="n">dsource</span> <span class="o">=</span> <span class="n">StringDataSource</span><span class="p">(</span><span class="s">&quot;aaaAAAaaaBBbbbb&quot;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">dsource</span><span class="p">)</span>
@@ -2232,17 +2196,17 @@ the <code>StreamTokenizer.DROP_TRAILING_SILENCE</code> mode.</p>
 </pre></div>
 
 
-<p>The first troken is delivered with its trailing silence because it is truncated
-while the second one has its trailing frames removed.</p>
-<p>Without <code>StreamTokenizer.DROP_TRAILING_SILENCE</code> the output whould be:</p>
+<p>The first troken is delivered with its tailing silence because it is truncated
+while the second one has its tailing frames removed.</p>
+<p>Without <code>StreamTokenizer.DROP_TAILING_SILENCE</code> the output whould be:</p>
 <div class="codehilite"><pre><span class="p">[([</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">],</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="p">([</span><span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">)]</span>
 </pre></div>
 
 
 </li>
 <li>
-<p><code>StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE</code>:
-       use both options. That means: first remove trailing silence, then ckeck if the
+<p><code>StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE</code>:
+       use both options. That means: first remove tailing silence, then ckeck if the
        token still has at least a length of <code>min_length</code>.</p>
 </li>
 </ol></div>
@@ -2256,8 +2220,7 @@ while the second one has its trailing frames removed.</p>
     
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
+<span class="sd">    **Parameters:**</span>
 <span class="sd">    </span>
 <span class="sd">    `validator` :</span>
 <span class="sd">        instance of `DataValidator` that implements `is_valid` method.</span>
@@ -2289,12 +2252,6 @@ while the second one has its trailing frames removed.</p>
 <span class="sd">        This arguement is normally used if `init_min` is used. **Default = 0**,</span>
 <span class="sd">        by default this argument is not taken into consideration.</span>
 <span class="sd">        </span>
-<span class="sd">    </span>
-<span class="sd">    keep_trailing_silence : boolean, default=False</span>
-<span class="sd">        Whether to keep the trailing non valid frames of a valid token</span>
-<span class="sd">        This seems to be particularly useful to avoid an abrupt cut-off</span>
-<span class="sd">        when tokenizing some kinds of signals (e.g. audio signal)</span>
-<span class="sd">    </span>
 <span class="sd">    `mode` : *(int, default=0)*</span>
 <span class="sd">        `mode` can be:</span>
 <span class="sd">        </span>
@@ -2346,7 +2303,7 @@ while the second one has its trailing frames removed.</p>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6)]</span>
 <span class="sd">            </span>
 <span class="sd">           </span>
-<span class="sd">       2. `StreamTokenizer.DROP_TRAILING_SILENCE`: drop all trailing non-valid frames</span>
+<span class="sd">       2. `StreamTokenizer.DROP_TAILING_SILENCE`: drop all tailing non-valid frames</span>
 <span class="sd">           from a token to be delivered if and only if it is not **truncated**.</span>
 <span class="sd">           This can be a bit tricky. A token is actually delivered if:</span>
 <span class="sd">           </span>
@@ -2358,19 +2315,19 @@ while the second one has its trailing frames removed.</p>
 <span class="sd">           </span>
 <span class="sd">        In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
 <span class="sd">        data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
-<span class="sd">        frame (`max_length` is reached but `max_continuous_silence` not yet) any trailing</span>
+<span class="sd">        frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
 <span class="sd">        silence will be kept because it can potentilly be part of valid token (if `max_length`</span>
 <span class="sd">        was bigger). But if `max_continuous_silence` is reched before `max_length`, the delivered</span>
 <span class="sd">        token will not be considered as truncted but a result of *normal* end of detection</span>
-<span class="sd">        (i.e. no more valid data). In that case the trailing silence can be removed if you use</span>
-<span class="sd">        the `StreamTokenizer.DROP_TRAILING_SILENCE` mode.</span>
+<span class="sd">        (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
+<span class="sd">        the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
 <span class="sd">           </span>
 <span class="sd">        Take the following example:</span>
 <span class="sd">            </span>
 <span class="sd">            #!python</span>
 <span class="sd">            tokenizer = StreamTokenizer(validator=UpperCaseChecker(), min_length=3,</span>
 <span class="sd">            max_length=6, max_continuous_silence=3,</span>
-<span class="sd">            mode=StreamTokenizer.DROP_TRAILING_SILENCE)</span>
+<span class="sd">            mode=StreamTokenizer.DROP_TAILING_SILENCE)</span>
 <span class="sd">            </span>
 <span class="sd">            dsource = StringDataSource(&quot;aaaAAAaaaBBbbbb&quot;)</span>
 <span class="sd">            tokenizer.tokenize(dsource)</span>
@@ -2380,17 +2337,17 @@ while the second one has its trailing frames removed.</p>
 <span class="sd">            #!python</span>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;], 9, 10)]</span>
 <span class="sd">            </span>
-<span class="sd">        The first troken is delivered with its trailing silence because it is truncated</span>
-<span class="sd">        while the second one has its trailing frames removed.</span>
+<span class="sd">        The first troken is delivered with its tailing silence because it is truncated</span>
+<span class="sd">        while the second one has its tailing frames removed.</span>
 <span class="sd">        </span>
-<span class="sd">        Without `StreamTokenizer.DROP_TRAILING_SILENCE` the output whould be:</span>
+<span class="sd">        Without `StreamTokenizer.DROP_TAILING_SILENCE` the output whould be:</span>
 <span class="sd">            </span>
 <span class="sd">            #!python</span>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;], 9, 13)]</span>
 <span class="sd">        </span>
 <span class="sd">        </span>
-<span class="sd">       3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE`:</span>
-<span class="sd">           use both options. That means: first remove trailing silence, then ckeck if the</span>
+<span class="sd">       3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`:</span>
+<span class="sd">           use both options. That means: first remove tailing silence, then ckeck if the</span>
 <span class="sd">           token still has at least a length of `min_length`.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2421,7 +2378,7 @@ while the second one has its trailing frames removed.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_strict_min_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
     
     <span class="bp">self</span><span class="o">.</span><span class="n">_deliver</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="bp">None</span>
@@ -2451,8 +2408,9 @@ while the second one has its trailing frames removed.</p>
   
     <div class="desc"><p>Return the current mode. To check whether a specific mode is activated use
 the bitwise 'and' operator <code>&amp;</code>. Example:</p>
-<div class="codehilite"><pre><span class="k">if</span> <span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="o">...</span>
+<p>.. code:: python</p>
+<div class="codehilite"><pre>if mode &amp; self.STRICT_MIN_LENGTH != 0:
+    ...
 </pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-auditok.core.StreamTokenizer.get_mode', this);">Show source &equiv;</a></p>
@@ -2462,10 +2420,10 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
 <span class="sd">    Return the current mode. To check whether a specific mode is activated use</span>
 <span class="sd">    the bitwise &#39;and&#39; operator `&amp;`. Example:</span>
 <span class="sd">       </span>
-<span class="sd">        #!python</span>
+<span class="sd">    .. code:: python</span>
+<span class="sd">    </span>
 <span class="sd">        if mode &amp; self.STRICT_MIN_LENGTH != 0:</span>
 <span class="sd">            ...</span>
-<span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
 </pre></div>
@@ -2484,48 +2442,43 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
 
     
   
-    <div class="desc"><p>Set this tokenizer's mode.</p>
-<h2>Paramerters</h2>
+    <div class="desc"><p><strong>Parameters:</strong></p>
 <p><code>mode</code> : <em>(int)</em>
-   New mode, must be one of:</p>
-<p>a. <code>StreamTokenizer.STRICT_MIN_LENGTH</code></p>
-<p>b. <code>StreamTokenizer.DROP_TRAILING_SILENCE</code></p>
-<p>c. <code>StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE</code></p>
-<p>d. 0</p>
+    New mode, must be one of:</p>
+<div class="codehilite"><pre>    a. `StreamTokenizer.STRICT_MIN_LENGTH`
+    b. `StreamTokenizer.DROP_TAILING_SILENCE`
+    c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       
+    d. 0
+</pre></div>
+
+
 <p>See <code>StreamTokenizer.__init__</code> for more information about the mode.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-auditok.core.StreamTokenizer.set_mode', this);">Show source &equiv;</a></p>
   <div id="source-auditok.core.StreamTokenizer.set_mode" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set this tokenizer&#39;s mode.</span>
-<span class="sd">    </span>
-<span class="sd">    Paramerters</span>
-<span class="sd">    ------------</span>
+<span class="sd">    **Parameters:**</span>
 <span class="sd">    </span>
 <span class="sd">    `mode` : *(int)*</span>
-<span class="sd">       New mode, must be one of:</span>
-<span class="sd">       </span>
-<span class="sd">       a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
-<span class="sd">       </span>
-<span class="sd">       b. `StreamTokenizer.DROP_TRAILING_SILENCE`</span>
-<span class="sd">       </span>
-<span class="sd">       c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TRAILING_SILENCE`</span>
-<span class="sd">       </span>
-<span class="sd">       d. 0</span>
-<span class="sd">       </span>
-<span class="sd">       </span>
-<span class="sd">       See `StreamTokenizer.__init__` for more information about the mode.</span>
+<span class="sd">        New mode, must be one of:</span>
+<span class="sd">        </span>
+<span class="sd">            a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
+<span class="sd">            b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">            c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       </span>
+<span class="sd">            d. 0</span>
+<span class="sd">               </span>
+<span class="sd">    See `StreamTokenizer.__init__` for more information about the mode.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">,</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">,</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
         
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong value for mode&quot;</span><span class="p">)</span>
     
     <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">mode</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_strict_min_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_drop_trailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TRAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_drop_tailing_silence</span>  <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">DROP_TAILING_SILENCE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
 </pre></div>
 
   </div>
@@ -2544,13 +2497,13 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
   
     <div class="desc"><p>Read data from <code>data_source</code>, one frame a time, and process the read frames in
 order to detect sequences of frames that make up valid tokens.</p>
-<h2>Parameters</h2>
+<p><strong>Parameters:</strong></p>
 <p><code>data_source</code> : instance of the <code>DataSource</code> class that implements a 'read' method.
 'read' should return a slice of signal, i.e. frame (of whatever         type as long as it can be processed by validator) and None if         there is no more signal.</p>
 <p><code>callback</code> : an optional 3-argument function.
    If a <code>callback</code> function is given, it will be called each time a valid token
    is found.</p>
-<h2>Returns</h2>
+<p><strong>Returns:</strong></p>
 <p>A list of tokens if <code>callback</code> is None. Each token is tuple with the following elemnts:</p>
 <div class="codehilite"><pre><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 </pre></div>
@@ -2566,8 +2519,8 @@ original data and <code>end</code> : index of the last frame.</p></div>
 <span class="sd">    Read data from `data_source`, one frame a time, and process the read frames in</span>
 <span class="sd">    order to detect sequences of frames that make up valid tokens.</span>
 <span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
+<span class="sd">    **Parameters:**</span>
+<span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    `data_source` : instance of the `DataSource` class that implements a &#39;read&#39; method.</span>
 <span class="sd">    &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
@@ -2579,8 +2532,7 @@ original data and <code>end</code> : index of the last frame.</p></div>
 <span class="sd">       is found.</span>
 <span class="sd">       </span>
 <span class="sd">       </span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
+<span class="sd">    **Returns:**</span>
 <span class="sd">    </span>
 <span class="sd">    A list of tokens if `callback` is None. Each token is tuple with the following elemnts:</span>
 <span class="sd">    </span>
