@@ -1104,7 +1104,7 @@ handy features:</p>
 <li>Limit the amount (i.e. duration) of read data (very useful when reading
    data from the microphone)</li>
 <li>Record and rewind data (also useful if you read data from the microphone
-   and you want to process it many times offline and/or save it)  </li>
+   and you want to process it many times off-line and/or save it)  </li>
 </ul>
 <p>Last but not least, the current version has only one audio window validator based on
 signal energy.</p>
@@ -1120,7 +1120,7 @@ silent frames.</p>
 <h2>Extract sub-sequences of consecutive upper case letters</h2>
 <p>We want to extract sub-sequences of characters that have:</p>
 <ul>
-<li>A minimu length of 1 (<code>min_length</code> = 1)</li>
+<li>A minimum length of 1 (<code>min_length</code> = 1)</li>
 <li>A maximum length of 9999 (<code>max_length</code> = 9999)</li>
 <li>Zero consecutive lower case characters within them (<code>max_continuous_silence</code> = 0)</li>
 </ul>
@@ -1169,7 +1169,7 @@ start and end position in the original sequence respectively:</p>
 
 <p>Notice the tailing lower case letters "dd" and "ee" at the end of the two
 tokens. The default behavior of <code>StreamTokenizer</code> is to keep the <em>tailing
-silence</em> if it does'nt exceed <code>max_continuous_silence</code>. This can be changed
+silence</em> if it doesn't exceed <code>max_continuous_silence</code>. This can be changed
 using the <code>DROP_TAILING_SILENCE</code> mode (see next example).</p>
 <h2>Remove tailing silence</h2>
 <p>Tailing silence can be useful for many sound recognition applications, including
@@ -1374,7 +1374,7 @@ that precedes the first acoustic activity or follows the last activity
 in a record. It preserves whatever it founds between the two activities.
 In other words, it removes the leading and tailing silence.</p>
 <p>Sampling rate is 44100 sample per second, we'll use an analysis window of 100 ms
-(i.e. bloc_ksize == 4410)</p>
+(i.e. block_size == 4410)</p>
 <p>Energy threshold is 50.</p>
 <p>The tokenizer will start accumulating windows up from the moment it encounters
 the first analysis window of an energy &gt;= 50. ALL the following windows will be 
@@ -1388,7 +1388,7 @@ ans <code>init_max_silence</code>. By <code>init_min</code>=3 and <code>init_max
 that a valid event must start with at least 3 noisy windows, between which there
 is at most 1 silent window.</p>
 <p>Still with this configuration we can get the tokenizer detect that noise as a valid event
-(if it actually contains 3 consecutive noisy frames). To circummvent this we use an enough
+(if it actually contains 3 consecutive noisy frames). To circumvent this we use an enough
 large analysis window (here of 100 ms) to ensure that the brief noise be surrounded by a much
 longer silence and hence the energy of the overall analysis window will be below 50.</p>
 <p>When using a shorter analysis window (of 10ms for instance, block_size == 441), the brief
@@ -1440,11 +1440,11 @@ Again we can deal with this situation by using a higher energy threshold (55 for
 
 
 <h2>Online audio signal processing</h2>
-<p>In the next example, audio data is directely acquired from the built-in microphone.
+<p>In the next example, audio data is directly acquired from the built-in microphone.
 The <code>tokenize</code> method is passed a callback function so that audio activities
 are delivered as soon as they are detected. Each detected activity is played
 back using the build-in audio output device.</p>
-<p>As mentionned before , Signal energy is strongly related to many factors such
+<p>As mentioned before , Signal energy is strongly related to many factors such
 microphone sensitivity, background noise (including noise inherent to the hardware), 
 distance and your operating system sound settings. Try a lower <code>energy_threshold</code>
 if your noise does not seem to be detected and a higher threshold if you notice
@@ -1494,7 +1494,6 @@ September, 2015</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-auditok', this);">Show source &equiv;</a></p>
   <div id="source-auditok" class="source">
     <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
-
 <span class="sd">`auditok` is a module that can be used as a generic tool for data</span>
 <span class="sd">tokenization. Although its core motivation is **Acoustic Activity </span>
 <span class="sd">Detection** (AAD) and extraction from audio streams (i.e. detect</span>
@@ -1546,7 +1545,7 @@ September, 2015</p>
 <span class="sd"> - Limit the amount (i.e. duration) of read data (very useful when reading</span>
 <span class="sd">   data from the microphone)</span>
 <span class="sd"> - Record and rewind data (also useful if you read data from the microphone</span>
-<span class="sd">   and you want to process it many times offline and/or save it)  </span>
+<span class="sd">   and you want to process it many times off-line and/or save it)  </span>
 
 
 <span class="sd">Last but not least, the current version has only one audio window validator based on</span>
@@ -1570,7 +1569,7 @@ September, 2015</p>
 <span class="sd">## Extract sub-sequences of consecutive upper case letters</span>
 <span class="sd">We want to extract sub-sequences of characters that have:</span>
 <span class="sd">    </span>
-<span class="sd">  - A minimu length of 1 (`min_length` = 1)</span>
+<span class="sd">  - A minimum length of 1 (`min_length` = 1)</span>
 <span class="sd">  - A maximum length of 9999 (`max_length` = 9999)</span>
 <span class="sd">  - Zero consecutive lower case characters within them (`max_continuous_silence` = 0)</span>
 
@@ -1620,7 +1619,7 @@ September, 2015</p>
 <span class="sd">    </span>
 <span class="sd">Notice the tailing lower case letters &quot;dd&quot; and &quot;ee&quot; at the end of the two</span>
 <span class="sd">tokens. The default behavior of `StreamTokenizer` is to keep the *tailing</span>
-<span class="sd">silence* if it does&#39;nt exceed `max_continuous_silence`. This can be changed</span>
+<span class="sd">silence* if it doesn&#39;t exceed `max_continuous_silence`. This can be changed</span>
 <span class="sd">using the `DROP_TAILING_SILENCE` mode (see next example).</span>
 
 <span class="sd">## Remove tailing silence</span>
@@ -1845,7 +1844,7 @@ September, 2015</p>
 <span class="sd">In other words, it removes the leading and tailing silence.</span>
 
 <span class="sd">Sampling rate is 44100 sample per second, we&#39;ll use an analysis window of 100 ms</span>
-<span class="sd">(i.e. bloc_ksize == 4410)</span>
+<span class="sd">(i.e. block_size == 4410)</span>
 
 <span class="sd">Energy threshold is 50.</span>
 
@@ -1863,7 +1862,7 @@ September, 2015</p>
 <span class="sd">is at most 1 silent window.</span>
 
 <span class="sd">Still with this configuration we can get the tokenizer detect that noise as a valid event</span>
-<span class="sd">(if it actually contains 3 consecutive noisy frames). To circummvent this we use an enough</span>
+<span class="sd">(if it actually contains 3 consecutive noisy frames). To circumvent this we use an enough</span>
 <span class="sd">large analysis window (here of 100 ms) to ensure that the brief noise be surrounded by a much</span>
 <span class="sd">longer silence and hence the energy of the overall analysis window will be below 50.</span>
 
@@ -1920,12 +1919,12 @@ September, 2015</p>
 
 <span class="sd">## Online audio signal processing</span>
 
-<span class="sd">In the next example, audio data is directely acquired from the built-in microphone.</span>
+<span class="sd">In the next example, audio data is directly acquired from the built-in microphone.</span>
 <span class="sd">The `tokenize` method is passed a callback function so that audio activities</span>
 <span class="sd">are delivered as soon as they are detected. Each detected activity is played</span>
 <span class="sd">back using the build-in audio output device.</span>
 
-<span class="sd">As mentionned before , Signal energy is strongly related to many factors such</span>
+<span class="sd">As mentioned before , Signal energy is strongly related to many factors such</span>
 <span class="sd">microphone sensitivity, background noise (including noise inherent to the hardware), </span>
 <span class="sd">distance and your operating system sound settings. Try a lower `energy_threshold`</span>
 <span class="sd">if your noise does not seem to be detected and a higher threshold if you notice</span>
@@ -1978,8 +1977,8 @@ September, 2015</p>
 <span class="sd">-------</span>
 
 <span class="sd">This package is published under GNU GPL Version 3.</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">core</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">util</span> <span class="kn">import</span> <span class="o">*</span>
