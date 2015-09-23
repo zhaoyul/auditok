@@ -1086,10 +1086,6 @@ table {
 
 <span class="k">class</span> <span class="nc">StreamTokenizer</span><span class="p">():</span>
     
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for stream tokenizers. It implements a 4-state automata scheme</span>
-<span class="sd">    for interesting sub-sequences extraction.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">SILENCE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">POSSIBLE_SILENCE</span> <span class="o">=</span> <span class="mi">1</span>
@@ -1103,8 +1099,9 @@ table {
                  <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="p">,</span>
                  <span class="n">init_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">init_max_silence</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class for stream tokenizers. It implements a 4-state automaton scheme</span>
+<span class="sd">        for interesting sub-sequences extraction.</span>
 <span class="sd">        </span>
 <span class="sd">        **Parameters:**</span>
 <span class="sd">        </span>
@@ -1135,55 +1132,58 @@ table {
 <span class="sd">        `init_max_silence` : *(int, default=0)*</span>
 <span class="sd">            Maximum number of tolerated consecutive non-valid frames if the \</span>
 <span class="sd">            number already gathered valid frames has not yet reached &#39;init_min&#39;.</span>
-<span class="sd">            This arguement is normally used if `init_min` is used. **Default = 0**,</span>
+<span class="sd">            This argument is normally used if `init_min` is used. **Default = 0**,</span>
 <span class="sd">            by default this argument is not taken into consideration.</span>
 <span class="sd">            </span>
 <span class="sd">        `mode` : *(int, default=0)*</span>
 <span class="sd">            `mode` can be:</span>
 <span class="sd">            </span>
-<span class="sd">           1. `StreamTokenizer.STRICT_MIN_LENGTH`: if token *i* is delivered because `max_length`</span>
-<span class="sd">               is reatched, and token *i+1* is immedialtely adjacent to</span>
+<span class="sd">           1. `StreamTokenizer.STRICT_MIN_LENGTH`: </span>
+<span class="sd">               if token *i* is delivered because `max_length`</span>
+<span class="sd">               is reached, and token *i+1* is immediately adjacent to</span>
 <span class="sd">               token *i* (i.e. token *i* ends at frame *k* and token *i+1* starts</span>
-<span class="sd">               at frame *k+1*) then accept toekn *i+1* only of it has a size of at</span>
-<span class="sd">               least `min_length`. The default behavior is to accept toekn *i+1*</span>
+<span class="sd">               at frame *k+1*) then accept token *i+1* only of it has a size of at</span>
+<span class="sd">               least `min_length`. The default behavior is to accept token *i+1*</span>
 <span class="sd">               event if it is shorter than `min_length` (given that the above conditions</span>
-<span class="sd">               are fullfilled of course).</span>
+<span class="sd">               are fulfilled of course).</span>
 <span class="sd">               </span>
-<span class="sd">              Example</span>
-<span class="sd">              -------</span>
+<span class="sd">               **Example:**</span>
 <span class="sd">               </span>
 <span class="sd">               In the following code, without `STRICT_MIN_LENGTH`, the &#39;BB&#39; token is</span>
-<span class="sd">               accepted although it is shorter than `min_length` (3), because it immediatly</span>
+<span class="sd">               accepted although it is shorter than `min_length` (3), because it immediately</span>
 <span class="sd">               follows the latest delivered token:</span>
 <span class="sd">               </span>
-<span class="sd">                #!python</span>
-<span class="sd">                from auditok import StreamTokenizer, StringDataSource, DataValidator</span>
-<span class="sd">    </span>
-<span class="sd">                class UpperCaseChecker(DataValidator):</span>
+<span class="sd">            </span>
+<span class="sd">                    from auditok import StreamTokenizer, StringDataSource, DataValidator</span>
+<span class="sd">        </span>
+<span class="sd">                    class UpperCaseChecker(DataValidator):</span>
 <span class="sd">                    def is_valid(self, frame):</span>
 <span class="sd">                        return frame.isupper()</span>
-<span class="sd">    </span>
-<span class="sd">                dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
-<span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
-<span class="sd">                            min_length=3, max_length=4, max_continuous_silence=0)</span>
+<span class="sd">        </span>
+<span class="sd">                    dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
+<span class="sd">                    tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
+<span class="sd">                                min_length=3, max_length=4, max_continuous_silence=0)</span>
 <span class="sd">                 </span>
-<span class="sd">                tokenizer.tokenize(dsource)</span>
-<span class="sd">                </span>
-<span class="sd">                </span>
-<span class="sd">            output:</span>
-<span class="sd">                </span>
+<span class="sd">                    tokenizer.tokenize(dsource)</span>
+<span class="sd">                    </span>
+<span class="sd">                    </span>
+<span class="sd">               output:</span>
+
+
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6), ([&#39;B&#39;, &#39;B&#39;], 7, 8)]</span>
-<span class="sd">            </span>
-<span class="sd">            The following toknizer will however reject the &#39;BB&#39; token </span>
-<span class="sd">            </span>
+
+
+<span class="sd">               The following tokenizer will however reject the &#39;BB&#39; token:</span>
+<span class="sd">             </span>
+<span class="sd">                #!python  </span>
 <span class="sd">                dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
 <span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
 <span class="sd">                            min_length=3, max_length=4, max_continuous_silence=0,</span>
 <span class="sd">                            mode=StreamTokenizer.STRICT_MIN_LENGTH)</span>
 <span class="sd">                tokenizer.tokenize(dsource)</span>
 <span class="sd">            </span>
-<span class="sd">            output:</span>
+<span class="sd">               output:</span>
 <span class="sd">            </span>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6)]</span>
@@ -1193,24 +1193,24 @@ table {
 <span class="sd">               from a token to be delivered if and only if it is not **truncated**.</span>
 <span class="sd">               This can be a bit tricky. A token is actually delivered if:</span>
 <span class="sd">               </span>
-<span class="sd">               a. `max_continuous_silence` is reached</span>
+<span class="sd">               - a. `max_continuous_silence` is reached</span>
 <span class="sd">               </span>
 <span class="sd">               OR</span>
 <span class="sd">               </span>
-<span class="sd">               b. Its length reaches `max_length`. This is called a **truncated** token</span>
+<span class="sd">               - b. Its length reaches `max_length`. This is called a **truncated** token</span>
 <span class="sd">               </span>
-<span class="sd">            In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
-<span class="sd">            data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
-<span class="sd">            frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
-<span class="sd">            silence will be kept because it can potentilly be part of valid token (if `max_length`</span>
-<span class="sd">            was bigger). But if `max_continuous_silence` is reched before `max_length`, the delivered</span>
-<span class="sd">            token will not be considered as truncted but a result of *normal* end of detection</span>
-<span class="sd">            (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
-<span class="sd">            the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
+<span class="sd">               In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
+<span class="sd">               data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
+<span class="sd">               frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
+<span class="sd">               silence will be kept because it can potentially be part of valid token (if `max_length`</span>
+<span class="sd">               was bigger). But if `max_continuous_silence` is reached before `max_length`, the delivered</span>
+<span class="sd">               token will not be considered as truncated but a result of *normal* end of detection</span>
+<span class="sd">               (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
+<span class="sd">               the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
 <span class="sd">               </span>
-<span class="sd">            Take the following example:</span>
-<span class="sd">                </span>
-<span class="sd">                #!python</span>
+<span class="sd">               Take the following example:</span>
+<span class="sd">            </span>
+<span class="sd">                #!python                </span>
 <span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), min_length=3,</span>
 <span class="sd">                max_length=6, max_continuous_silence=3,</span>
 <span class="sd">                mode=StreamTokenizer.DROP_TAILING_SILENCE)</span>
@@ -1218,26 +1218,27 @@ table {
 <span class="sd">                dsource = StringDataSource(&quot;aaaAAAaaaBBbbbb&quot;)</span>
 <span class="sd">                tokenizer.tokenize(dsource)</span>
 <span class="sd">                </span>
-<span class="sd">            output:</span>
+<span class="sd">               output:</span>
 <span class="sd">            </span>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;], 9, 10)]</span>
 <span class="sd">                </span>
-<span class="sd">            The first troken is delivered with its tailing silence because it is truncated</span>
-<span class="sd">            while the second one has its tailing frames removed.</span>
-<span class="sd">            </span>
-<span class="sd">            Without `StreamTokenizer.DROP_TAILING_SILENCE` the output whould be:</span>
+<span class="sd">               The first token is delivered with its tailing silence because it is truncated</span>
+<span class="sd">               while the second one has its tailing frames removed.</span>
 <span class="sd">                </span>
-<span class="sd">                #!python</span>
+<span class="sd">               Without `StreamTokenizer.DROP_TAILING_SILENCE` the output would be:</span>
+<span class="sd">                    </span>
+<span class="sd">                #!python    </span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;], 9, 13)]</span>
-
+<span class="sd">        </span>
 <span class="sd">            </span>
 <span class="sd">            </span>
 <span class="sd">           3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`:</span>
 <span class="sd">               use both options. That means: first remove tailing silence, then ckeck if the</span>
 <span class="sd">               token still has at least a length of `min_length`.</span>
-<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        
+        
         
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="n">DataValidator</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;&#39;validator&#39; must be an instance of &#39;DataValidator&#39;&quot;</span><span class="p">)</span>
@@ -1252,9 +1253,11 @@ table {
         <span class="k">if</span> <span class="n">max_continuous_silence</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;max_continuous_silence&#39; must be &lt; </span><span class="se">\</span>
 <span class="s">            &#39;max_length&#39; (value={0})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_continuous_silence</span><span class="p">))</span>
-            
-        <span class="c"># init_min must be shorter than max_length</span>
         
+        <span class="k">if</span> <span class="n">init_min</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;init_min&#39; must be &lt; </span><span class="se">\</span>
+<span class="s">            &#39;max_length&#39; (value={0})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_continuous_silence</span><span class="p">))</span>
+            
         <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="n">validator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="n">min_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">max_length</span>
@@ -1284,11 +1287,15 @@ table {
 <span class="sd">        </span>
 <span class="sd">        `mode` : *(int)*</span>
 <span class="sd">            New mode, must be one of:</span>
+<span class="sd">                </span>
 <span class="sd">            </span>
-<span class="sd">                a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
-<span class="sd">                b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
-<span class="sd">                c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       </span>
-<span class="sd">                d. 0</span>
+<span class="sd">        - a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
+<span class="sd">        </span>
+<span class="sd">        - b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">        </span>
+<span class="sd">        - c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">               </span>
+<span class="sd">        - d. `0`</span>
 <span class="sd">                   </span>
 <span class="sd">        See `StreamTokenizer.__init__` for more information about the mode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1308,8 +1315,7 @@ table {
 <span class="sd">        Return the current mode. To check whether a specific mode is activated use</span>
 <span class="sd">        the bitwise &#39;and&#39; operator `&amp;`. Example:</span>
 <span class="sd">           </span>
-<span class="sd">        .. code:: python</span>
-<span class="sd">        </span>
+<span class="sd">            #!python</span>
 <span class="sd">            if mode &amp; self.STRICT_MIN_LENGTH != 0:</span>
 <span class="sd">                ...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1333,18 +1339,18 @@ table {
 <span class="sd">        </span>
 <span class="sd">        </span>
 <span class="sd">        `data_source` : instance of the `DataSource` class that implements a &#39;read&#39; method.</span>
-<span class="sd">        &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
-<span class="sd">        type as long as it can be processed by validator) and None if \</span>
-<span class="sd">        there is no more signal.</span>
+<span class="sd">            &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
+<span class="sd">            type as long as it can be processed by validator) and None if \</span>
+<span class="sd">            there is no more signal.</span>
 <span class="sd">        </span>
 <span class="sd">        `callback` : an optional 3-argument function.</span>
-<span class="sd">           If a `callback` function is given, it will be called each time a valid token</span>
-<span class="sd">           is found.</span>
+<span class="sd">            If a `callback` function is given, it will be called each time a valid token</span>
+<span class="sd">            is found.</span>
 <span class="sd">           </span>
 <span class="sd">           </span>
 <span class="sd">        **Returns:**</span>
 <span class="sd">        </span>
-<span class="sd">        A list of tokens if `callback` is None. Each token is tuple with the following elemnts:</span>
+<span class="sd">        A list of tokens if `callback` is None. Each token is tuple with the following elements:</span>
 <span class="sd">        </span>
 <span class="sd">            #!python</span>
 <span class="sd">            (data, start, end)</span>
@@ -1352,7 +1358,6 @@ table {
 <span class="sd">        where `data` is a list of read frames, `start`: index of the first frame in the</span>
 <span class="sd">        original data and `end` : index of the last frame. </span>
 <span class="sd">        </span>
-<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_reinitialize</span><span class="p">()</span>
@@ -1524,17 +1529,11 @@ table {
       <p id="auditok.core.StreamTokenizer" class="name">class <span class="ident">StreamTokenizer</span></p>
       
   
-    <div class="desc"><p>Class for stream tokenizers. It implements a 4-state automata scheme
-for interesting sub-sequences extraction.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-auditok.core.StreamTokenizer', this);">Show source &equiv;</a></p>
   <div id="source-auditok.core.StreamTokenizer" class="source">
     <div class="codehilite"><pre><span class="k">class</span> <span class="nc">StreamTokenizer</span><span class="p">():</span>
     
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for stream tokenizers. It implements a 4-state automata scheme</span>
-<span class="sd">    for interesting sub-sequences extraction.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">SILENCE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">POSSIBLE_SILENCE</span> <span class="o">=</span> <span class="mi">1</span>
@@ -1548,8 +1547,9 @@ for interesting sub-sequences extraction.</p></div>
                  <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="p">,</span>
                  <span class="n">init_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">init_max_silence</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class for stream tokenizers. It implements a 4-state automaton scheme</span>
+<span class="sd">        for interesting sub-sequences extraction.</span>
 <span class="sd">        </span>
 <span class="sd">        **Parameters:**</span>
 <span class="sd">        </span>
@@ -1580,55 +1580,58 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        `init_max_silence` : *(int, default=0)*</span>
 <span class="sd">            Maximum number of tolerated consecutive non-valid frames if the \</span>
 <span class="sd">            number already gathered valid frames has not yet reached &#39;init_min&#39;.</span>
-<span class="sd">            This arguement is normally used if `init_min` is used. **Default = 0**,</span>
+<span class="sd">            This argument is normally used if `init_min` is used. **Default = 0**,</span>
 <span class="sd">            by default this argument is not taken into consideration.</span>
 <span class="sd">            </span>
 <span class="sd">        `mode` : *(int, default=0)*</span>
 <span class="sd">            `mode` can be:</span>
 <span class="sd">            </span>
-<span class="sd">           1. `StreamTokenizer.STRICT_MIN_LENGTH`: if token *i* is delivered because `max_length`</span>
-<span class="sd">               is reatched, and token *i+1* is immedialtely adjacent to</span>
+<span class="sd">           1. `StreamTokenizer.STRICT_MIN_LENGTH`: </span>
+<span class="sd">               if token *i* is delivered because `max_length`</span>
+<span class="sd">               is reached, and token *i+1* is immediately adjacent to</span>
 <span class="sd">               token *i* (i.e. token *i* ends at frame *k* and token *i+1* starts</span>
-<span class="sd">               at frame *k+1*) then accept toekn *i+1* only of it has a size of at</span>
-<span class="sd">               least `min_length`. The default behavior is to accept toekn *i+1*</span>
+<span class="sd">               at frame *k+1*) then accept token *i+1* only of it has a size of at</span>
+<span class="sd">               least `min_length`. The default behavior is to accept token *i+1*</span>
 <span class="sd">               event if it is shorter than `min_length` (given that the above conditions</span>
-<span class="sd">               are fullfilled of course).</span>
+<span class="sd">               are fulfilled of course).</span>
 <span class="sd">               </span>
-<span class="sd">              Example</span>
-<span class="sd">              -------</span>
+<span class="sd">               **Example:**</span>
 <span class="sd">               </span>
 <span class="sd">               In the following code, without `STRICT_MIN_LENGTH`, the &#39;BB&#39; token is</span>
-<span class="sd">               accepted although it is shorter than `min_length` (3), because it immediatly</span>
+<span class="sd">               accepted although it is shorter than `min_length` (3), because it immediately</span>
 <span class="sd">               follows the latest delivered token:</span>
 <span class="sd">               </span>
-<span class="sd">                #!python</span>
-<span class="sd">                from auditok import StreamTokenizer, StringDataSource, DataValidator</span>
-<span class="sd">    </span>
-<span class="sd">                class UpperCaseChecker(DataValidator):</span>
+<span class="sd">            </span>
+<span class="sd">                    from auditok import StreamTokenizer, StringDataSource, DataValidator</span>
+<span class="sd">        </span>
+<span class="sd">                    class UpperCaseChecker(DataValidator):</span>
 <span class="sd">                    def is_valid(self, frame):</span>
 <span class="sd">                        return frame.isupper()</span>
-<span class="sd">    </span>
-<span class="sd">                dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
-<span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
-<span class="sd">                            min_length=3, max_length=4, max_continuous_silence=0)</span>
+<span class="sd">        </span>
+<span class="sd">                    dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
+<span class="sd">                    tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
+<span class="sd">                                min_length=3, max_length=4, max_continuous_silence=0)</span>
 <span class="sd">                 </span>
-<span class="sd">                tokenizer.tokenize(dsource)</span>
-<span class="sd">                </span>
-<span class="sd">                </span>
-<span class="sd">            output:</span>
-<span class="sd">                </span>
+<span class="sd">                    tokenizer.tokenize(dsource)</span>
+<span class="sd">                    </span>
+<span class="sd">                    </span>
+<span class="sd">               output:</span>
+
+
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6), ([&#39;B&#39;, &#39;B&#39;], 7, 8)]</span>
-<span class="sd">            </span>
-<span class="sd">            The following toknizer will however reject the &#39;BB&#39; token </span>
-<span class="sd">            </span>
+
+
+<span class="sd">               The following tokenizer will however reject the &#39;BB&#39; token:</span>
+<span class="sd">             </span>
+<span class="sd">                #!python  </span>
 <span class="sd">                dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
 <span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
 <span class="sd">                            min_length=3, max_length=4, max_continuous_silence=0,</span>
 <span class="sd">                            mode=StreamTokenizer.STRICT_MIN_LENGTH)</span>
 <span class="sd">                tokenizer.tokenize(dsource)</span>
 <span class="sd">            </span>
-<span class="sd">            output:</span>
+<span class="sd">               output:</span>
 <span class="sd">            </span>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6)]</span>
@@ -1638,24 +1641,24 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">               from a token to be delivered if and only if it is not **truncated**.</span>
 <span class="sd">               This can be a bit tricky. A token is actually delivered if:</span>
 <span class="sd">               </span>
-<span class="sd">               a. `max_continuous_silence` is reached</span>
+<span class="sd">               - a. `max_continuous_silence` is reached</span>
 <span class="sd">               </span>
 <span class="sd">               OR</span>
 <span class="sd">               </span>
-<span class="sd">               b. Its length reaches `max_length`. This is called a **truncated** token</span>
+<span class="sd">               - b. Its length reaches `max_length`. This is called a **truncated** token</span>
 <span class="sd">               </span>
-<span class="sd">            In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
-<span class="sd">            data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
-<span class="sd">            frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
-<span class="sd">            silence will be kept because it can potentilly be part of valid token (if `max_length`</span>
-<span class="sd">            was bigger). But if `max_continuous_silence` is reched before `max_length`, the delivered</span>
-<span class="sd">            token will not be considered as truncted but a result of *normal* end of detection</span>
-<span class="sd">            (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
-<span class="sd">            the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
+<span class="sd">               In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
+<span class="sd">               data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
+<span class="sd">               frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
+<span class="sd">               silence will be kept because it can potentially be part of valid token (if `max_length`</span>
+<span class="sd">               was bigger). But if `max_continuous_silence` is reached before `max_length`, the delivered</span>
+<span class="sd">               token will not be considered as truncated but a result of *normal* end of detection</span>
+<span class="sd">               (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
+<span class="sd">               the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
 <span class="sd">               </span>
-<span class="sd">            Take the following example:</span>
-<span class="sd">                </span>
-<span class="sd">                #!python</span>
+<span class="sd">               Take the following example:</span>
+<span class="sd">            </span>
+<span class="sd">                #!python                </span>
 <span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), min_length=3,</span>
 <span class="sd">                max_length=6, max_continuous_silence=3,</span>
 <span class="sd">                mode=StreamTokenizer.DROP_TAILING_SILENCE)</span>
@@ -1663,26 +1666,27 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">                dsource = StringDataSource(&quot;aaaAAAaaaBBbbbb&quot;)</span>
 <span class="sd">                tokenizer.tokenize(dsource)</span>
 <span class="sd">                </span>
-<span class="sd">            output:</span>
+<span class="sd">               output:</span>
 <span class="sd">            </span>
 <span class="sd">                #!python</span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;], 9, 10)]</span>
 <span class="sd">                </span>
-<span class="sd">            The first troken is delivered with its tailing silence because it is truncated</span>
-<span class="sd">            while the second one has its tailing frames removed.</span>
-<span class="sd">            </span>
-<span class="sd">            Without `StreamTokenizer.DROP_TAILING_SILENCE` the output whould be:</span>
+<span class="sd">               The first token is delivered with its tailing silence because it is truncated</span>
+<span class="sd">               while the second one has its tailing frames removed.</span>
 <span class="sd">                </span>
-<span class="sd">                #!python</span>
+<span class="sd">               Without `StreamTokenizer.DROP_TAILING_SILENCE` the output would be:</span>
+<span class="sd">                    </span>
+<span class="sd">                #!python    </span>
 <span class="sd">                [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;], 9, 13)]</span>
-
+<span class="sd">        </span>
 <span class="sd">            </span>
 <span class="sd">            </span>
 <span class="sd">           3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`:</span>
 <span class="sd">               use both options. That means: first remove tailing silence, then ckeck if the</span>
 <span class="sd">               token still has at least a length of `min_length`.</span>
-<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        
+        
         
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="n">DataValidator</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;&#39;validator&#39; must be an instance of &#39;DataValidator&#39;&quot;</span><span class="p">)</span>
@@ -1697,9 +1701,11 @@ for interesting sub-sequences extraction.</p></div>
         <span class="k">if</span> <span class="n">max_continuous_silence</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;max_continuous_silence&#39; must be &lt; </span><span class="se">\</span>
 <span class="s">            &#39;max_length&#39; (value={0})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_continuous_silence</span><span class="p">))</span>
-            
-        <span class="c"># init_min must be shorter than max_length</span>
         
+        <span class="k">if</span> <span class="n">init_min</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;init_min&#39; must be &lt; </span><span class="se">\</span>
+<span class="s">            &#39;max_length&#39; (value={0})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_continuous_silence</span><span class="p">))</span>
+            
         <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="n">validator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="n">min_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">max_length</span>
@@ -1729,11 +1735,15 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        </span>
 <span class="sd">        `mode` : *(int)*</span>
 <span class="sd">            New mode, must be one of:</span>
+<span class="sd">                </span>
 <span class="sd">            </span>
-<span class="sd">                a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
-<span class="sd">                b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
-<span class="sd">                c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       </span>
-<span class="sd">                d. 0</span>
+<span class="sd">        - a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
+<span class="sd">        </span>
+<span class="sd">        - b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">        </span>
+<span class="sd">        - c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">               </span>
+<span class="sd">        - d. `0`</span>
 <span class="sd">                   </span>
 <span class="sd">        See `StreamTokenizer.__init__` for more information about the mode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1753,8 +1763,7 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        Return the current mode. To check whether a specific mode is activated use</span>
 <span class="sd">        the bitwise &#39;and&#39; operator `&amp;`. Example:</span>
 <span class="sd">           </span>
-<span class="sd">        .. code:: python</span>
-<span class="sd">        </span>
+<span class="sd">            #!python</span>
 <span class="sd">            if mode &amp; self.STRICT_MIN_LENGTH != 0:</span>
 <span class="sd">                ...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1778,18 +1787,18 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        </span>
 <span class="sd">        </span>
 <span class="sd">        `data_source` : instance of the `DataSource` class that implements a &#39;read&#39; method.</span>
-<span class="sd">        &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
-<span class="sd">        type as long as it can be processed by validator) and None if \</span>
-<span class="sd">        there is no more signal.</span>
+<span class="sd">            &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
+<span class="sd">            type as long as it can be processed by validator) and None if \</span>
+<span class="sd">            there is no more signal.</span>
 <span class="sd">        </span>
 <span class="sd">        `callback` : an optional 3-argument function.</span>
-<span class="sd">           If a `callback` function is given, it will be called each time a valid token</span>
-<span class="sd">           is found.</span>
+<span class="sd">            If a `callback` function is given, it will be called each time a valid token</span>
+<span class="sd">            is found.</span>
 <span class="sd">           </span>
 <span class="sd">           </span>
 <span class="sd">        **Returns:**</span>
 <span class="sd">        </span>
-<span class="sd">        A list of tokens if `callback` is None. Each token is tuple with the following elemnts:</span>
+<span class="sd">        A list of tokens if `callback` is None. Each token is tuple with the following elements:</span>
 <span class="sd">        </span>
 <span class="sd">            #!python</span>
 <span class="sd">            (data, start, end)</span>
@@ -1797,7 +1806,6 @@ for interesting sub-sequences extraction.</p></div>
 <span class="sd">        where `data` is a list of read frames, `start`: index of the first frame in the</span>
 <span class="sd">        original data and `end` : index of the last frame. </span>
 <span class="sd">        </span>
-<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_reinitialize</span><span class="p">()</span>
@@ -2097,7 +2105,9 @@ for interesting sub-sequences extraction.</p></div>
 
     
   
-    <div class="desc"><p><strong>Parameters:</strong></p>
+    <div class="desc"><p>Class for stream tokenizers. It implements a 4-state automaton scheme
+for interesting sub-sequences extraction.</p>
+<p><strong>Parameters:</strong></p>
 <p><code>validator</code> :
     instance of <code>DataValidator</code> that implements <code>is_valid</code> method.</p>
 <p><code>min_length</code> : <em>(int)</em>
@@ -2114,35 +2124,35 @@ for interesting sub-sequences extraction.</p></div>
     ineffective. </p>
 <p><code>init_max_silence</code> : <em>(int, default=0)</em>
     Maximum number of tolerated consecutive non-valid frames if the             number already gathered valid frames has not yet reached 'init_min'.
-    This arguement is normally used if <code>init_min</code> is used. <strong>Default = 0</strong>,
+    This argument is normally used if <code>init_min</code> is used. <strong>Default = 0</strong>,
     by default this argument is not taken into consideration.</p>
 <p><code>mode</code> : <em>(int, default=0)</em>
     <code>mode</code> can be:</p>
 <ol>
 <li>
-<p><code>StreamTokenizer.STRICT_MIN_LENGTH</code>: if token <em>i</em> is delivered because <code>max_length</code>
-       is reatched, and token <em>i+1</em> is immedialtely adjacent to
+<p><code>StreamTokenizer.STRICT_MIN_LENGTH</code>: 
+       if token <em>i</em> is delivered because <code>max_length</code>
+       is reached, and token <em>i+1</em> is immediately adjacent to
        token <em>i</em> (i.e. token <em>i</em> ends at frame <em>k</em> and token <em>i+1</em> starts
-       at frame <em>k+1</em>) then accept toekn <em>i+1</em> only of it has a size of at
-       least <code>min_length</code>. The default behavior is to accept toekn <em>i+1</em>
+       at frame <em>k+1</em>) then accept token <em>i+1</em> only of it has a size of at
+       least <code>min_length</code>. The default behavior is to accept token <em>i+1</em>
        event if it is shorter than <code>min_length</code> (given that the above conditions
-       are fullfilled of course).</p>
-<p>Example</p>
-<hr />
+       are fulfilled of course).</p>
+<p><strong>Example:</strong></p>
 <p>In the following code, without <code>STRICT_MIN_LENGTH</code>, the 'BB' token is
-   accepted although it is shorter than <code>min_length</code> (3), because it immediatly
+   accepted although it is shorter than <code>min_length</code> (3), because it immediately
    follows the latest delivered token:</p>
-<div class="codehilite"><pre><span class="kn">from</span> <span class="nn">auditok</span> <span class="kn">import</span> <span class="n">StreamTokenizer</span><span class="p">,</span> <span class="n">StringDataSource</span><span class="p">,</span> <span class="n">DataValidator</span>
+<div class="codehilite"><pre>    <span class="kn">from</span> <span class="nn">auditok</span> <span class="kn">import</span> <span class="n">StreamTokenizer</span><span class="p">,</span> <span class="n">StringDataSource</span><span class="p">,</span> <span class="n">DataValidator</span>
 
-<span class="k">class</span> <span class="nc">UpperCaseChecker</span><span class="p">(</span><span class="n">DataValidator</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">UpperCaseChecker</span><span class="p">(</span><span class="n">DataValidator</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span>
 
-<span class="n">dsource</span> <span class="o">=</span> <span class="n">StringDataSource</span><span class="p">(</span><span class="s">&quot;aaaAAAABBbbb&quot;</span><span class="p">)</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">StreamTokenizer</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="n">UpperCaseChecker</span><span class="p">(),</span> 
-            <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">dsource</span> <span class="o">=</span> <span class="n">StringDataSource</span><span class="p">(</span><span class="s">&quot;aaaAAAABBbbb&quot;</span><span class="p">)</span>
+    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">StreamTokenizer</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="n">UpperCaseChecker</span><span class="p">(),</span> 
+                <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">dsource</span><span class="p">)</span>
+    <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">dsource</span><span class="p">)</span>
 </pre></div>
 
 
@@ -2151,12 +2161,12 @@ for interesting sub-sequences extraction.</p></div>
 </pre></div>
 
 
-<p>The following toknizer will however reject the 'BB' token </p>
-<div class="codehilite"><pre>dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)
-tokenizer = StreamTokenizer(validator=UpperCaseChecker(), 
-            min_length=3, max_length=4, max_continuous_silence=0,
-            mode=StreamTokenizer.STRICT_MIN_LENGTH)
-tokenizer.tokenize(dsource)
+<p>The following tokenizer will however reject the 'BB' token:</p>
+<div class="codehilite"><pre><span class="n">dsource</span> <span class="o">=</span> <span class="n">StringDataSource</span><span class="p">(</span><span class="s">&quot;aaaAAAABBbbb&quot;</span><span class="p">)</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">StreamTokenizer</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="n">UpperCaseChecker</span><span class="p">(),</span> 
+            <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">StreamTokenizer</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">dsource</span><span class="p">)</span>
 </pre></div>
 
 
@@ -2170,17 +2180,21 @@ tokenizer.tokenize(dsource)
 <p><code>StreamTokenizer.DROP_TAILING_SILENCE</code>: drop all tailing non-valid frames
        from a token to be delivered if and only if it is not <strong>truncated</strong>.
        This can be a bit tricky. A token is actually delivered if:</p>
-<p>a. <code>max_continuous_silence</code> is reached</p>
+<ul>
+<li>a. <code>max_continuous_silence</code> is reached</li>
+</ul>
 <p>OR</p>
-<p>b. Its length reaches <code>max_length</code>. This is called a <strong>truncated</strong> token</p>
+<ul>
+<li>b. Its length reaches <code>max_length</code>. This is called a <strong>truncated</strong> token</li>
+</ul>
 <p>In the current implementation, a <code>StreamTokenizer</code>'s decision is only based on seen
-data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated
-frame (<code>max_length</code> is reached but <code>max_continuous_silence</code> not yet) any tailing
-silence will be kept because it can potentilly be part of valid token (if <code>max_length</code>
-was bigger). But if <code>max_continuous_silence</code> is reched before <code>max_length</code>, the delivered
-token will not be considered as truncted but a result of <em>normal</em> end of detection
-(i.e. no more valid data). In that case the tailing silence can be removed if you use
-the <code>StreamTokenizer.DROP_TAILING_SILENCE</code> mode.</p>
+   data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated
+   frame (<code>max_length</code> is reached but <code>max_continuous_silence</code> not yet) any tailing
+   silence will be kept because it can potentially be part of valid token (if <code>max_length</code>
+   was bigger). But if <code>max_continuous_silence</code> is reached before <code>max_length</code>, the delivered
+   token will not be considered as truncated but a result of <em>normal</em> end of detection
+   (i.e. no more valid data). In that case the tailing silence can be removed if you use
+   the <code>StreamTokenizer.DROP_TAILING_SILENCE</code> mode.</p>
 <p>Take the following example:</p>
 <div class="codehilite"><pre><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">StreamTokenizer</span><span class="p">(</span><span class="n">validator</span><span class="o">=</span><span class="n">UpperCaseChecker</span><span class="p">(),</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
@@ -2196,9 +2210,9 @@ the <code>StreamTokenizer.DROP_TAILING_SILENCE</code> mode.</p>
 </pre></div>
 
 
-<p>The first troken is delivered with its tailing silence because it is truncated
-while the second one has its tailing frames removed.</p>
-<p>Without <code>StreamTokenizer.DROP_TAILING_SILENCE</code> the output whould be:</p>
+<p>The first token is delivered with its tailing silence because it is truncated
+   while the second one has its tailing frames removed.</p>
+<p>Without <code>StreamTokenizer.DROP_TAILING_SILENCE</code> the output would be:</p>
 <div class="codehilite"><pre><span class="p">[([</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">],</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="p">([</span><span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">)]</span>
 </pre></div>
 
@@ -2217,8 +2231,9 @@ while the second one has its tailing frames removed.</p>
              <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_continuous_silence</span><span class="p">,</span>
              <span class="n">init_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">init_max_silence</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for stream tokenizers. It implements a 4-state automaton scheme</span>
+<span class="sd">    for interesting sub-sequences extraction.</span>
 <span class="sd">    </span>
 <span class="sd">    **Parameters:**</span>
 <span class="sd">    </span>
@@ -2249,55 +2264,54 @@ while the second one has its tailing frames removed.</p>
 <span class="sd">    `init_max_silence` : *(int, default=0)*</span>
 <span class="sd">        Maximum number of tolerated consecutive non-valid frames if the \</span>
 <span class="sd">        number already gathered valid frames has not yet reached &#39;init_min&#39;.</span>
-<span class="sd">        This arguement is normally used if `init_min` is used. **Default = 0**,</span>
+<span class="sd">        This argument is normally used if `init_min` is used. **Default = 0**,</span>
 <span class="sd">        by default this argument is not taken into consideration.</span>
 <span class="sd">        </span>
 <span class="sd">    `mode` : *(int, default=0)*</span>
 <span class="sd">        `mode` can be:</span>
 <span class="sd">        </span>
-<span class="sd">       1. `StreamTokenizer.STRICT_MIN_LENGTH`: if token *i* is delivered because `max_length`</span>
-<span class="sd">           is reatched, and token *i+1* is immedialtely adjacent to</span>
+<span class="sd">       1. `StreamTokenizer.STRICT_MIN_LENGTH`: </span>
+<span class="sd">           if token *i* is delivered because `max_length`</span>
+<span class="sd">           is reached, and token *i+1* is immediately adjacent to</span>
 <span class="sd">           token *i* (i.e. token *i* ends at frame *k* and token *i+1* starts</span>
-<span class="sd">           at frame *k+1*) then accept toekn *i+1* only of it has a size of at</span>
-<span class="sd">           least `min_length`. The default behavior is to accept toekn *i+1*</span>
+<span class="sd">           at frame *k+1*) then accept token *i+1* only of it has a size of at</span>
+<span class="sd">           least `min_length`. The default behavior is to accept token *i+1*</span>
 <span class="sd">           event if it is shorter than `min_length` (given that the above conditions</span>
-<span class="sd">           are fullfilled of course).</span>
+<span class="sd">           are fulfilled of course).</span>
 <span class="sd">           </span>
-<span class="sd">          Example</span>
-<span class="sd">          -------</span>
+<span class="sd">           **Example:**</span>
 <span class="sd">           </span>
 <span class="sd">           In the following code, without `STRICT_MIN_LENGTH`, the &#39;BB&#39; token is</span>
-<span class="sd">           accepted although it is shorter than `min_length` (3), because it immediatly</span>
+<span class="sd">           accepted although it is shorter than `min_length` (3), because it immediately</span>
 <span class="sd">           follows the latest delivered token:</span>
 <span class="sd">           </span>
-<span class="sd">            #!python</span>
-<span class="sd">            from auditok import StreamTokenizer, StringDataSource, DataValidator</span>
-
-<span class="sd">            class UpperCaseChecker(DataValidator):</span>
+<span class="sd">        </span>
+<span class="sd">                from auditok import StreamTokenizer, StringDataSource, DataValidator</span>
+<span class="sd">    </span>
+<span class="sd">                class UpperCaseChecker(DataValidator):</span>
 <span class="sd">                def is_valid(self, frame):</span>
 <span class="sd">                    return frame.isupper()</span>
-
-<span class="sd">            dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
-<span class="sd">            tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
-<span class="sd">                        min_length=3, max_length=4, max_continuous_silence=0)</span>
+<span class="sd">    </span>
+<span class="sd">                dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
+<span class="sd">                tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
+<span class="sd">                            min_length=3, max_length=4, max_continuous_silence=0)</span>
 <span class="sd">             </span>
-<span class="sd">            tokenizer.tokenize(dsource)</span>
-<span class="sd">            </span>
-<span class="sd">            </span>
-<span class="sd">        output:</span>
-<span class="sd">            </span>
+<span class="sd">                tokenizer.tokenize(dsource)</span>
+<span class="sd">                </span>
+<span class="sd">                </span>
+<span class="sd">           output:</span>
 <span class="sd">            #!python</span>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6), ([&#39;B&#39;, &#39;B&#39;], 7, 8)]</span>
-<span class="sd">        </span>
-<span class="sd">        The following toknizer will however reject the &#39;BB&#39; token </span>
-<span class="sd">        </span>
+<span class="sd">           The following tokenizer will however reject the &#39;BB&#39; token:</span>
+<span class="sd">         </span>
+<span class="sd">            #!python  </span>
 <span class="sd">            dsource = StringDataSource(&quot;aaaAAAABBbbb&quot;)</span>
 <span class="sd">            tokenizer = StreamTokenizer(validator=UpperCaseChecker(), </span>
 <span class="sd">                        min_length=3, max_length=4, max_continuous_silence=0,</span>
 <span class="sd">                        mode=StreamTokenizer.STRICT_MIN_LENGTH)</span>
 <span class="sd">            tokenizer.tokenize(dsource)</span>
 <span class="sd">        </span>
-<span class="sd">        output:</span>
+<span class="sd">           output:</span>
 <span class="sd">        </span>
 <span class="sd">            #!python</span>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;A&#39;], 3, 6)]</span>
@@ -2307,24 +2321,24 @@ while the second one has its tailing frames removed.</p>
 <span class="sd">           from a token to be delivered if and only if it is not **truncated**.</span>
 <span class="sd">           This can be a bit tricky. A token is actually delivered if:</span>
 <span class="sd">           </span>
-<span class="sd">           a. `max_continuous_silence` is reached</span>
+<span class="sd">           - a. `max_continuous_silence` is reached</span>
 <span class="sd">           </span>
 <span class="sd">           OR</span>
 <span class="sd">           </span>
-<span class="sd">           b. Its length reaches `max_length`. This is called a **truncated** token</span>
+<span class="sd">           - b. Its length reaches `max_length`. This is called a **truncated** token</span>
 <span class="sd">           </span>
-<span class="sd">        In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
-<span class="sd">        data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
-<span class="sd">        frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
-<span class="sd">        silence will be kept because it can potentilly be part of valid token (if `max_length`</span>
-<span class="sd">        was bigger). But if `max_continuous_silence` is reched before `max_length`, the delivered</span>
-<span class="sd">        token will not be considered as truncted but a result of *normal* end of detection</span>
-<span class="sd">        (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
-<span class="sd">        the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
+<span class="sd">           In the current implementation, a `StreamTokenizer`&#39;s decision is only based on seen</span>
+<span class="sd">           data and on incoming data. Thus, if a token is truncated at a non-valid but tolerated</span>
+<span class="sd">           frame (`max_length` is reached but `max_continuous_silence` not yet) any tailing</span>
+<span class="sd">           silence will be kept because it can potentially be part of valid token (if `max_length`</span>
+<span class="sd">           was bigger). But if `max_continuous_silence` is reached before `max_length`, the delivered</span>
+<span class="sd">           token will not be considered as truncated but a result of *normal* end of detection</span>
+<span class="sd">           (i.e. no more valid data). In that case the tailing silence can be removed if you use</span>
+<span class="sd">           the `StreamTokenizer.DROP_TAILING_SILENCE` mode.</span>
 <span class="sd">           </span>
-<span class="sd">        Take the following example:</span>
-<span class="sd">            </span>
-<span class="sd">            #!python</span>
+<span class="sd">           Take the following example:</span>
+<span class="sd">        </span>
+<span class="sd">            #!python                </span>
 <span class="sd">            tokenizer = StreamTokenizer(validator=UpperCaseChecker(), min_length=3,</span>
 <span class="sd">            max_length=6, max_continuous_silence=3,</span>
 <span class="sd">            mode=StreamTokenizer.DROP_TAILING_SILENCE)</span>
@@ -2332,25 +2346,27 @@ while the second one has its tailing frames removed.</p>
 <span class="sd">            dsource = StringDataSource(&quot;aaaAAAaaaBBbbbb&quot;)</span>
 <span class="sd">            tokenizer.tokenize(dsource)</span>
 <span class="sd">            </span>
-<span class="sd">        output:</span>
+<span class="sd">           output:</span>
 <span class="sd">        </span>
 <span class="sd">            #!python</span>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;], 9, 10)]</span>
 <span class="sd">            </span>
-<span class="sd">        The first troken is delivered with its tailing silence because it is truncated</span>
-<span class="sd">        while the second one has its tailing frames removed.</span>
-<span class="sd">        </span>
-<span class="sd">        Without `StreamTokenizer.DROP_TAILING_SILENCE` the output whould be:</span>
+<span class="sd">           The first token is delivered with its tailing silence because it is truncated</span>
+<span class="sd">           while the second one has its tailing frames removed.</span>
 <span class="sd">            </span>
-<span class="sd">            #!python</span>
+<span class="sd">           Without `StreamTokenizer.DROP_TAILING_SILENCE` the output would be:</span>
+<span class="sd">                </span>
+<span class="sd">            #!python    </span>
 <span class="sd">            [([&#39;A&#39;, &#39;A&#39;, &#39;A&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;], 3, 8), ([&#39;B&#39;, &#39;B&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;], 9, 13)]</span>
+<span class="sd">    </span>
 <span class="sd">        </span>
 <span class="sd">        </span>
 <span class="sd">       3. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`:</span>
 <span class="sd">           use both options. That means: first remove tailing silence, then ckeck if the</span>
 <span class="sd">           token still has at least a length of `min_length`.</span>
-<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    
+    
     
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="n">DataValidator</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;&#39;validator&#39; must be an instance of &#39;DataValidator&#39;&quot;</span><span class="p">)</span>
@@ -2365,9 +2381,11 @@ while the second one has its tailing frames removed.</p>
     <span class="k">if</span> <span class="n">max_continuous_silence</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;max_continuous_silence&#39; must be &lt; </span><span class="se">\</span>
 <span class="s">        &#39;max_length&#39; (value={0})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_continuous_silence</span><span class="p">))</span>
-        
-    <span class="c"># init_min must be shorter than max_length</span>
     
+    <span class="k">if</span> <span class="n">init_min</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;init_min&#39; must be &lt; </span><span class="se">\</span>
+<span class="s">        &#39;max_length&#39; (value={0})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_continuous_silence</span><span class="p">))</span>
+        
     <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="n">validator</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="n">min_length</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">max_length</span>
@@ -2408,9 +2426,8 @@ while the second one has its tailing frames removed.</p>
   
     <div class="desc"><p>Return the current mode. To check whether a specific mode is activated use
 the bitwise 'and' operator <code>&amp;</code>. Example:</p>
-<p>.. code:: python</p>
-<div class="codehilite"><pre>if mode &amp; self.STRICT_MIN_LENGTH != 0:
-    ...
+<div class="codehilite"><pre><span class="k">if</span> <span class="n">mode</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">STRICT_MIN_LENGTH</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="o">...</span>
 </pre></div></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-auditok.core.StreamTokenizer.get_mode', this);">Show source &equiv;</a></p>
@@ -2420,8 +2437,7 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
 <span class="sd">    Return the current mode. To check whether a specific mode is activated use</span>
 <span class="sd">    the bitwise &#39;and&#39; operator `&amp;`. Example:</span>
 <span class="sd">       </span>
-<span class="sd">    .. code:: python</span>
-<span class="sd">    </span>
+<span class="sd">        #!python</span>
 <span class="sd">        if mode &amp; self.STRICT_MIN_LENGTH != 0:</span>
 <span class="sd">            ...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2445,13 +2461,20 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
     <div class="desc"><p><strong>Parameters:</strong></p>
 <p><code>mode</code> : <em>(int)</em>
     New mode, must be one of:</p>
-<div class="codehilite"><pre>    a. `StreamTokenizer.STRICT_MIN_LENGTH`
-    b. `StreamTokenizer.DROP_TAILING_SILENCE`
-    c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       
-    d. 0
-</pre></div>
-
-
+<ul>
+<li>
+<p>a. <code>StreamTokenizer.STRICT_MIN_LENGTH</code></p>
+</li>
+<li>
+<p>b. <code>StreamTokenizer.DROP_TAILING_SILENCE</code></p>
+</li>
+<li>
+<p>c. <code>StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE</code></p>
+</li>
+<li>
+<p>d. <code>0</code></p>
+</li>
+</ul>
 <p>See <code>StreamTokenizer.__init__</code> for more information about the mode.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-auditok.core.StreamTokenizer.set_mode', this);">Show source &equiv;</a></p>
@@ -2462,11 +2485,15 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
 <span class="sd">    </span>
 <span class="sd">    `mode` : *(int)*</span>
 <span class="sd">        New mode, must be one of:</span>
+<span class="sd">            </span>
 <span class="sd">        </span>
-<span class="sd">            a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
-<span class="sd">            b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
-<span class="sd">            c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`       </span>
-<span class="sd">            d. 0</span>
+<span class="sd">    - a. `StreamTokenizer.STRICT_MIN_LENGTH`</span>
+<span class="sd">    </span>
+<span class="sd">    - b. `StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">    </span>
+<span class="sd">    - c. `StreamTokenizer.STRICT_MIN_LENGTH | StreamTokenizer.DROP_TAILING_SILENCE`</span>
+<span class="sd">           </span>
+<span class="sd">    - d. `0`</span>
 <span class="sd">               </span>
 <span class="sd">    See `StreamTokenizer.__init__` for more information about the mode.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2499,12 +2526,12 @@ the bitwise 'and' operator <code>&amp;</code>. Example:</p>
 order to detect sequences of frames that make up valid tokens.</p>
 <p><strong>Parameters:</strong></p>
 <p><code>data_source</code> : instance of the <code>DataSource</code> class that implements a 'read' method.
-'read' should return a slice of signal, i.e. frame (of whatever         type as long as it can be processed by validator) and None if         there is no more signal.</p>
+    'read' should return a slice of signal, i.e. frame (of whatever             type as long as it can be processed by validator) and None if             there is no more signal.</p>
 <p><code>callback</code> : an optional 3-argument function.
-   If a <code>callback</code> function is given, it will be called each time a valid token
-   is found.</p>
+    If a <code>callback</code> function is given, it will be called each time a valid token
+    is found.</p>
 <p><strong>Returns:</strong></p>
-<p>A list of tokens if <code>callback</code> is None. Each token is tuple with the following elemnts:</p>
+<p>A list of tokens if <code>callback</code> is None. Each token is tuple with the following elements:</p>
 <div class="codehilite"><pre><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 </pre></div>
 
@@ -2523,18 +2550,18 @@ original data and <code>end</code> : index of the last frame.</p></div>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    `data_source` : instance of the `DataSource` class that implements a &#39;read&#39; method.</span>
-<span class="sd">    &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
-<span class="sd">    type as long as it can be processed by validator) and None if \</span>
-<span class="sd">    there is no more signal.</span>
+<span class="sd">        &#39;read&#39; should return a slice of signal, i.e. frame (of whatever \</span>
+<span class="sd">        type as long as it can be processed by validator) and None if \</span>
+<span class="sd">        there is no more signal.</span>
 <span class="sd">    </span>
 <span class="sd">    `callback` : an optional 3-argument function.</span>
-<span class="sd">       If a `callback` function is given, it will be called each time a valid token</span>
-<span class="sd">       is found.</span>
+<span class="sd">        If a `callback` function is given, it will be called each time a valid token</span>
+<span class="sd">        is found.</span>
 <span class="sd">       </span>
 <span class="sd">       </span>
 <span class="sd">    **Returns:**</span>
 <span class="sd">    </span>
-<span class="sd">    A list of tokens if `callback` is None. Each token is tuple with the following elemnts:</span>
+<span class="sd">    A list of tokens if `callback` is None. Each token is tuple with the following elements:</span>
 <span class="sd">    </span>
 <span class="sd">        #!python</span>
 <span class="sd">        (data, start, end)</span>
@@ -2542,7 +2569,6 @@ original data and <code>end</code> : index of the last frame.</p></div>
 <span class="sd">    where `data` is a list of read frames, `start`: index of the first frame in the</span>
 <span class="sd">    original data and `end` : index of the last frame. </span>
 <span class="sd">    </span>
-<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="bp">self</span><span class="o">.</span><span class="n">_reinitialize</span><span class="p">()</span>

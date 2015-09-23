@@ -1628,18 +1628,15 @@ table {
 
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">sample_width</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> 
-                               <span class="n">dtype</span><span class="o">=</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">]),</span>
-                               <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-                               
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>                             
             
         <span class="nd">@staticmethod</span>
-        <span class="k">def</span> <span class="nf">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
         
         <span class="nd">@staticmethod</span>    
         <span class="k">def</span> <span class="nf">_signal_log_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">energy</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">200</span>
             <span class="k">return</span> <span class="mf">10.</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
@@ -1647,22 +1644,22 @@ table {
     <span class="k">else</span><span class="p">:</span>
         
         
-        <span class="n">_formats</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#39;B&#39;</span> <span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">}</span>
+        <span class="n">_formats</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#39;b&#39;</span> <span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;h&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s">&#39;i&#39;</span><span class="p">}</span>
         
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">sample_width</span><span class="p">):</span>
-            <span class="n">array</span><span class="p">(</span><span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">],</span> <span class="n">signal</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">array</span><span class="p">(</span><span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">],</span> <span class="n">signal</span><span class="p">))</span>
         
         <span class="nd">@staticmethod</span>
-        <span class="k">def</span> <span class="nf">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-                <span class="n">energy</span> <span class="o">=</span> <span class="mf">0.</span>
-                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">signal</span><span class="p">:</span>
-                    <span class="n">energy</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span>
-                <span class="k">return</span> <span class="n">energy</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">signal</span><span class="p">:</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span>
+            <span class="k">return</span> <span class="n">energy</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
         
         <span class="nd">@staticmethod</span>    
         <span class="k">def</span> <span class="nf">_signal_log_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">energy</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">200</span>
             <span class="k">return</span> <span class="mf">10.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
@@ -2400,18 +2397,15 @@ of the supplied parameters.</p>
 
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">sample_width</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> 
-                               <span class="n">dtype</span><span class="o">=</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">]),</span>
-                               <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-                               
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>                             
             
         <span class="nd">@staticmethod</span>
-        <span class="k">def</span> <span class="nf">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
         
         <span class="nd">@staticmethod</span>    
         <span class="k">def</span> <span class="nf">_signal_log_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">energy</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">200</span>
             <span class="k">return</span> <span class="mf">10.</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
@@ -2419,22 +2413,22 @@ of the supplied parameters.</p>
     <span class="k">else</span><span class="p">:</span>
         
         
-        <span class="n">_formats</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#39;B&#39;</span> <span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">}</span>
+        <span class="n">_formats</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#39;b&#39;</span> <span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;h&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s">&#39;i&#39;</span><span class="p">}</span>
         
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">sample_width</span><span class="p">):</span>
-            <span class="n">array</span><span class="p">(</span><span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">],</span> <span class="n">signal</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">array</span><span class="p">(</span><span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_formats</span><span class="p">[</span><span class="n">sample_width</span><span class="p">],</span> <span class="n">signal</span><span class="p">))</span>
         
         <span class="nd">@staticmethod</span>
-        <span class="k">def</span> <span class="nf">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-                <span class="n">energy</span> <span class="o">=</span> <span class="mf">0.</span>
-                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">signal</span><span class="p">:</span>
-                    <span class="n">energy</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span>
-                <span class="k">return</span> <span class="n">energy</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">signal</span><span class="p">:</span>
+                <span class="n">energy</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span>
+            <span class="k">return</span> <span class="n">energy</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
         
         <span class="nd">@staticmethod</span>    
         <span class="k">def</span> <span class="nf">_signal_log_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
-            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_siganl_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="n">AudioEnergyValidator</span><span class="o">.</span><span class="n">_signal_energy</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">energy</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">200</span>
             <span class="k">return</span> <span class="mf">10.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
