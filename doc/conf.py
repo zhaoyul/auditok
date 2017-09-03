@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'auditok'
-copyright = u'2015-2016, Amine Sehili'
+copyright = u'2017, Amine Sehili'
 author = u'Amine Sehili'
 
 # The version info for the project you're documenting, acts as replacement for

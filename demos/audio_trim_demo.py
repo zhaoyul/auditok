@@ -1,5 +1,5 @@
 """
-@author: Amine SEHILI <amine.sehili@gmail.com>
+@author: Kevin Li <li_zhaoyu@qq.com>
 September, 2015
 """
 

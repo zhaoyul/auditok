@@ -1,12 +1,5 @@
 """
-This module gathers processing (i.e. tokenization) classes.
-
-Class summary
-=============
-
-.. autosummary::
-
-        StreamTokenizer
+This mould is responsible for Tokenize the input(wav, stdin etc.)
 """
 
 from auditok.util import DataValidator

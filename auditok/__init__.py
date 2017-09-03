@@ -1,12 +1,8 @@
 """
 :author:
 
-Amine SEHILI <amine.sehili@gmail.com>
-2015-2016
-
-:License:
-
-This package is published under GNU GPL Version 3.
+Kevin Li <li_zhaoyu@qq.com>
+2017
 """
 
 from __future__ import absolute_import
@@ -17,5 +13,3 @@ from . import dataset
 from .exceptions import *
 
 __version__ = "0.1.6"
-
-

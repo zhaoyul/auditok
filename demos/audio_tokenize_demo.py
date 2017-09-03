@@ -1,6 +1,5 @@
 """
-@author: Amine SEHILI <amine.sehili@gmail.com>
-September, 2015
+@author: Kevin Li <li_zhaoyu@qq.com>
 """
 
 from auditok import ADSFactory, AudioEnergyValidator, StreamTokenizer, player_for, dataset

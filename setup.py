@@ -22,10 +22,10 @@ else:
 setup(
     name='auditok',
     version=version,
-    url='http://github.com/amsehili/auditok/',
+    url='https://github.com/zhaoyul/auditok',
     license='GNU General Public License v3 (GPLv3)',
-    author='Amine Sehili',
-    author_email='amine.sehili@gmail.com',
+    author='Kevin Li',
+    author_email='li_zhaoyu@qq.com',
     description='A module for Audio/Acoustic Activity Detection',
     long_description= long_desc,
     packages=['auditok'],

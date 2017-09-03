@@ -17,12 +17,12 @@ Class summary
 
 """
 
+import sys
 from abc import ABCMeta, abstractmethod
 import math
 from array import array
 from .io import Rewindable, from_file, BufferAudioSource, PyAudioSource
 from .exceptions import DuplicateArgument
-import sys
 
 try:
     import numpy
