@@ -1,0 +1,48 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Fri Sep 22 16:35:10 2017
+;; Desktop file format version 208
+;; Emacs version 25.2.1
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (22980 52030 811341 0) (desktop . "208") "kevinli@H0167.local" nil nil ((((font-backend mac-ct) (fontsize . 0) (font . "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#eaeaea") (background-color . "#000000") (line-spacing) (left-fringe . 8) (right-fringe . 8) (menu-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 0) (scroll-bar-height . 0) (alpha) (fullscreen . fullheight) (display-type . color) (background-mode . dark) (cursor-color . "#d54e53") (environment) (border-color . "#424242") (frameset--id . "A324-C234-A4C8-2001") (frameset--mini t . t) (height . 53) (width . 179) (modeline . t) (minibuffer . t) (unsplittable) (left . 0) (top . 23) (right-divider-width . 0) (bottom-divider-width . 0) (icon-name) (visibility . t) (display . "H0167.local") (explicit-name) (tool-bar-position . top)) ((min-height . 4) (min-width . 20) (min-height-ignore . 2) (min-width-ignore . 10) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 56) (min-pixel-width . 140) (min-pixel-height-ignore . 28) (min-pixel-width-ignore . 70) (min-pixel-height-safe . 14) (min-pixel-width-safe . 28)) hc (pixel-width . 1269) (pixel-height . 741) (total-width . 181) (total-height . 53) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 847) (pixel-height . 741) (total-width . 121) (total-height . 53) (normal-height . 1.0) (normal-width . 0.5070093457943925) (buffer "core.py" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 0 t nil 0 nil) (vscroll . 0) (dedicated) (point . 573) (start . 1))) (leaf (last . t) (pixel-width . 422) (pixel-height . 741) (total-width . 60) (total-height . 53) (normal-height . 1.0) (normal-width . 0.4929906542056075) (buffer "*scratch*" (selected) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 0 t nil 0 nil) (vscroll . 0) (dedicated) (point . 1) (start . 1)))))])
+(setq comint-input-ring nil)
+(setq compile-history nil)
+(setq desktop-missing-file-warning nil)
+(setq dired-regexp-history nil)
+(setq extended-command-history '("dired-virtual-mode" "shell" "shell-script-mode" "shell" "shell-mode" "dirs" "shell" "list-packages" "package-install" "linum-mode" "run-python" "cider-jack-in" "latex" "magit" "eval"))
+(setq face-name-history nil)
+(setq file-name-history '("~/sandbox/auditok/auditok/" "~/sandbox/auditok/auditok/core.py" "~/.emacs.d/org-clock-save.el" "~/.emacs.d/elpa-25.2/evil-20170904.1346/evil-autoloads.el" "~/.emacs.d/elpa-25.2/goto-chg-20170917.1200/goto-chg-autoloads.el" "~/.emacs.d/custom.el" "~/sandbox/auditok/auditok/core.py" "~/sandbox/KevinNote/pocket.org" "~/sandbox/auditok/auditok/cmdline.py" "~/sandbox/auditok/" "~/sandbox/TheJoyOfClojure/Chapter06.clj" "/Users/kevinli/sandbox/KevinNote/pocket.org"))
+(setq grep-find-history nil)
+(setq grep-history nil)
+(setq ido-buffer-history nil)
+(setq ido-last-directory-list nil)
+(setq ido-work-directory-list nil)
+(setq ido-work-file-list nil)
+(setq ivy-history '("origin" "TUTORIAL" "*scratch*"))
+(setq minibuffer-history '("evil" "li_zhaoyu@msn.com"))
+(setq query-replace-history nil)
+(setq read-expression-history '("w"))
+(setq regexp-history nil)
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq search-ring '("STRICT_MIN_LENG" "SILENCE" "./" "evil" "abc" "ë≈‡ë—µ" "latex" "book" "undo" "c-w"))
+(setq shell-command-history nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  "/Users/kevinli/sandbox/auditok/auditok/core.py"
+  "core.py"
+  'dired-mode
+  '(anzu-mode auto-revert-mode global-auto-revert-mode whole-line-or-region-mode hes-mode whitespace-cleanup-mode auto-compile-on-load-mode immortal-scratch-mode projectile-mode guide-key-mode diff-hl-dired-mode)
+  573
+  '(1 nil)
+  t
+  '("/Users/kevinli/sandbox/auditok/auditok/")
+  '((buffer-file-coding-system . undecided-unix))
+  '((mark-ring (1 1))))
+
