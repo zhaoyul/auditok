@@ -1,29 +1,3 @@
-"""
-Module for low-level audio input-output operations.
-
-Class summary
-=============
-
-.. autosummary::
-
-        AudioSource
-        Rewindable
-        BufferAudioSource
-        WaveAudioSource
-        PyAudioSource
-        StdinAudioSource
-        PyAudioPlayer
-        
-
-Function summary
-================
-
-.. autosummary::
-
-        from_file
-        player_for
-"""
-
 from abc import ABCMeta, abstractmethod
 import wave
 import sys
@@ -37,25 +11,6 @@ DEFAULT_NB_CHANNELS = 1
 
 
 class AudioSource():
-    """ 
-    Base class for audio source objects.
-
-    Subclasses should implement methods to open/close and audio stream 
-    and read the desired amount of audio samples.
-
-    :Parameters:
-
-        `sampling_rate` : int
-            Number of samples per second of audio stream. Default = 16000.
-
-        `sample_width` : int
-            Size in bytes of one audio sample. Possible values : 1, 2, 4.
-            Default = 2.
-
-        `channels` : int
-            Number of channels of audio stream. The current version supports
-            only mono audio streams (i.e. one channel).
-    """
 
     __metaclass__ = ABCMeta
 
@@ -87,22 +42,7 @@ class AudioSource():
 
     @abstractmethod
     def read(self, size):
-        """
-        Read and return `size` audio samples at most.
-
-        :Parameters:
-
-            `size` : int
-                the number of samples to read.
-
-        :Returns:
-
-            Audio data as a string of length 'N' * 'sample_width' * 'channels', where 'N' is:
-
-            - `size` if `size` < 'left_samples'
-
-            - 'left_samples' if `size` > 'left_samples' 
-        """
+        '''read from audio stream'''
 
     def get_sampling_rate(self):
         """ Return the number of samples per second of audio stream """
